@@ -1,0 +1,94 @@
+import React, { useEffect, useRef, useState } from "react";
+import * as faceapi from "face-api.js";
+
+const FaceDetection = () => {
+  const videoRef = useRef(null);
+  const [mood, setMood] = useState("Not Detecting");
+  // const [detecting, setDetecting] = useState(false);
+  const intervalRef = useRef(null);
+
+  // ✅ Start video on mount
+  useEffect(() => {
+    const startVideo = async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+        }
+      } catch (err) {
+        console.error("❌ Camera access denied:", err);
+        alert("Please allow camera access.");
+      }
+    };
+
+    startVideo();
+  }, []);
+
+  // ✅ Load models on mount (only once)
+  useEffect(() => {
+    const loadModels = async () => {
+      const MODEL_URL = "/models";
+      await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL);
+      await faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL);
+      await faceapi.nets.faceExpressionNet.loadFromUri(MODEL_URL);
+      console.log("✅ Models loaded");
+    };
+
+    loadModels();
+  }, []);
+
+  // ✅ Mood detection function
+  const detectMood = async () => {
+    const result = await faceapi
+      .detectSingleFace(videoRef.current, new faceapi.TinyFaceDetectorOptions())
+      .withFaceLandmarks()
+      .withFaceExpressions();
+
+    if (result && result.expressions) {
+      const expressions = result.expressions;
+      const topMood = Object.entries(expressions).sort((a, b) => b[1] - a[1])[0][0];
+      setMood(topMood);
+      console.log("🧠 Mood:", topMood);
+    }
+  };
+
+  
+
+  // ✅ Clean up on unmount
+  useEffect(() => {
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, []);
+
+  return (
+    <div style={{ textAlign: "center", margin: "5vw" }}>
+      <h2>🧠 Current Mood: {mood}</h2>
+      <video
+        ref={videoRef}
+        width="640"
+        height="480"
+        autoPlay
+        muted
+        playsInline
+        style={{ borderRadius: "10px", marginTop: "20px" }}
+      />
+      <br />
+      <button
+        onClick={detectMood}
+        style={{
+          marginTop: "20px",
+          padding: "10px 20px",
+          fontSize: "1rem",
+          cursor: "pointer",
+        }}
+      >
+      Detect Mood
+      </button>
+    </div>
+  );
+};
+
+export default FaceDetection;
