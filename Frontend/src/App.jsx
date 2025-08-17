@@ -1,12 +1,13 @@
 // src/App.js
 import React from "react";
 import FaceDetection from './components/FaceDetection';
+import MoodSong from "./components/MoodSong";
 
 function App() {
   return (
     <div className="App">
-      <h1>Moody Player 😎</h1>
       <FaceDetection />
+      <MoodSong/>
     </div>
   );
 }

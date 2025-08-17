@@ -63,18 +63,20 @@ const FaceDetection = () => {
     };
   }, []);
 
-  return (
-    <div style={{ textAlign: "center", margin: "5vw" }}>
-      <h2>🧠 Current Mood: {mood}</h2>
+  return (<>
+      <h2
+       style={{ textAlign: "center", margin: "5vw" ,display:"flex",alignItems:"center",gap:"1rem"}}
+      >🧠 Current Mood: {mood}</h2>
+    <div style={{ textAlign: "center", margin: "5vw" ,marginTop:"-5vw",display:"flex",alignItems:"center",gap:"1rem"}}>
       <video
         ref={videoRef}
-        width="640"
-        height="480"
+        width="320"
+        height="200"
         autoPlay
         muted
         playsInline
-        style={{ borderRadius: "10px", marginTop: "20px" }}
-      />
+        style={{ borderRadius: "10px", marginTop: "20px",objectFit: "cover" ,aspectRatio:"16/9"}}
+        />
       <br />
       <button
         onClick={detectMood}
@@ -83,11 +85,16 @@ const FaceDetection = () => {
           padding: "10px 20px",
           fontSize: "1rem",
           cursor: "pointer",
+          color:"black",
+          borderRadius:"20px",
+          outline:"none",
+          border:"none",
         }}
-      >
+        >
       Detect Mood
       </button>
     </div>
+        </>
   );
 };
 
