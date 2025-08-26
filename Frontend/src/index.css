@@ -1,11 +1,5 @@
-*{
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  color: #fff;
-}
+
 :root{
-  height: 100%;
-  width: 100%;
   background-color: #101010;
 }
+@import "tailwindcss";
