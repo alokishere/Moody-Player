@@ -1,13 +1,16 @@
 // src/App.js
-import React from "react";
+import React, { useState } from "react";
 import FaceDetection from './components/FaceDetection';
 import MoodSong from "./components/MoodSong";
 
 function App() {
+   const [Songs, setSongs] = useState([
+ 
+  ]);
   return (
     <div className="App">
-      <FaceDetection />
-      <MoodSong/>
+      <FaceDetection setSongs={setSongs} />
+      <MoodSong Songs={Songs} />
     </div>
   );
 }

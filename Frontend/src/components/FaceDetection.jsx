@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as faceapi from "face-api.js";
+import axios  from 'axios';
 
-const FaceDetection = () => {
+const FaceDetection = ({ setSongs }) => {
   const videoRef = useRef(null);
-  const [mood, setMood] = useState("Not Detecting");
+  const [mood, setMood] = useState("sad");
   // const [detecting, setDetecting] = useState(false);
   const intervalRef = useRef(null);
 
@@ -51,7 +52,11 @@ const FaceDetection = () => {
       console.log("🧠 Mood:", topMood);
     }
   };
-
+axios.get(`http://localhost:3000/songs?mood=${mood}`)
+.then(response=>{
+  // console.log(response.data);
+  setSongs(response.data.songs)
+})
   
 
   // ✅ Clean up on unmount
@@ -61,6 +66,7 @@ const FaceDetection = () => {
         clearInterval(intervalRef.current);
       }
     };
+  
   }, []);
 
   return (<>
